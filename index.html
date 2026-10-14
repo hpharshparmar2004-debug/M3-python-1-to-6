@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Level M3-R5 Python Programming — CBT Examination Portal</title>
+    <style>
+        :root {
+            --primary-blue: #0f172a;
+            --secondary-blue: #2563eb;
+            --light-blue: #eff6ff;
+            --border-color: #cbd5e1;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success-green: #16a34a;
+            --warning-red: #dc2626;
+            --review-purple: #9333ea;
+            --not-visited: #94a3b8;
+            --bg-color: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex !important;
+        }
+
+        #login-screen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-card h2 {
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .login-card p {
+            color: var(--text-light);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .error-msg {
+            color: var(--warning-red);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 12px;
+            background: var(--light-blue);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--primary-blue);
+            line-height: 1.5;
+        }
+
+        #instructions-screen {
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--bg-color);
+        }
+
+        .instruction-card {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+        }
+
+        .instruction-card h2 {
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .instruction-card h4 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .exam-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            background: var(--light-blue);
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .instruction-rules {
+            margin-bottom: 25px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .instruction-rules ul {
+            padding-left: 20px;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .instruction-rules li {
+            margin-bottom: 8px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        #exam-screen {
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .fullscreen-bar {
+            background: #0f172a;
+            color: white;
+            font-size: 12px;
+            padding: 4px 15px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .fullscreen-bar button {
+            background: none; border: none; color: #93c5fd; cursor: pointer; text-decoration: underline; font-size: 12px;
+        }
+
+        .exam-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .exam-header h3 {
+            font-size: 18px;
+        }
+
+        .timer-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .exam-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .question-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+
+        .option-item:hover {
+            border-color: var(--secondary-blue);
+            background-color: var(--light-blue);
+        }
+
+        .option-item input {
+            margin-right: 14px;
+            transform: scale(1.2);
+            accent-color: var(--secondary-blue);
+        }
+
+        .option-item.selected {
+            border-color: var(--secondary-blue);
+            background-color: var(--light-blue);
+            font-weight: 500;
+        }
+
+        .exam-footer-controls {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-group-left, .btn-group-right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary-action {
+            background: var(--secondary-blue);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary-action:hover {
+            background: #1d4ed8;
+        }
+
+        aside.palette-sidebar {
+            width: 320px;
+            background: #f8fafc;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .palette-header {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .palette-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+            max-height: calc(100vh - 280px);
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: white;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palette-btn.current {
+            border: 2px solid var(--secondary-blue);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .palette-btn.not-visited { background: #ffffff; color: var(--not-visited); border-color: var(--not-visited); }
+        .palette-btn.visited-not-answered { background: #fee2e2; color: var(--warning-red); border-color: #fca5a5; }
+        .palette-btn.answered { background: #dcfce7; color: var(--success-green); border-color: #86efac; }
+        .palette-btn.marked { background: #f3e8ff; color: var(--review-purple); border-color: #d8b4fe; }
+        .palette-btn.answered-marked { background: linear-gradient(135deg, #dcfce7 50%, #f3e8ff 50%); color: var(--primary-blue); border-color: var(--review-purple); }
+
+        .submit-exam-btn {
+            margin-top: 15px;
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+        .submit-exam-btn:hover { background: #15803d; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-card h3 { margin-bottom: 15px; color: var(--primary-blue); }
+        .modal-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .modal-stats div {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: var(--light-blue);
+            border-radius: 6px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        #result-screen {
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            margin: auto;
+        }
+
+        .result-card h2 { color: var(--primary-blue); margin-bottom: 6px; }
+        .score-circle {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            color: var(--secondary-blue);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            font-size: 28px;
+            font-weight: 700;
+            border: 4px solid var(--secondary-blue);
+        }
+        .score-circle span { font-size: 13px; font-weight: 500; color: var(--text-light); }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .result-item {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .result-item span { font-weight: 700; float: right; }
+
+        @media(max-width: 768px) {
+            .exam-body { flex-direction: column-reverse; overflow-y: auto; }
+            aside.palette-sidebar { width: 100%; height: 240px; }
+            .palette-grid { max-height: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="screen active">
+        <div class="login-card">
+            <h2>CBT Examination Portal</h2>
+            <p>O Level M3-R5 Python Programming (Chapters 1-6)</p>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Candidate Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username (e.g. admin100)" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">Show</button>
+                </div>
+                <button type="submit" class="btn">Proceed to Instructions</button>
+                <div id="login-error" class="error-msg">Invalid username or password. Please try again.</div>
+            </form>
+            <div class="demo-credentials">
+                <strong>Demo Credentials:</strong><br>
+                Candidate 1: Username: <code>admin100</code> | Password: <code>100</code><br>
+                Candidate 2: Username: <code>admin101</code> | Password: <code>101</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSTRUCTIONS SCREEN -->
+    <div id="instructions-screen" class="screen">
+        <div class="instruction-card">
+            <h2>Examination Instructions</h2>
+            <h4>O Level M3-R5 Python Programming Practice Set[cite: 1]</h4>
+            
+            <div class="exam-details-grid">
+                <div><strong>Syllabus Scope:</strong> Chapters 1-6 (Algorithms, Tokens, Control Statements, Collections, Functions)[cite: 1, 2, 3, 4, 5, 6, 7]</div>
+                <div><strong>Total Questions:</strong> 100 MCQs[cite: 1]</div>
+                <div><strong>Duration:</strong> 60 Minutes</div>
+                <div><strong>Maximum Marks:</strong> 100[cite: 1]</div>
+                <div><strong>Question Type:</strong> Single-correct MCQ[cite: 1]</div>
+                <div><strong>Negative Marking:</strong> None[cite: 1]</div>
+            </div>
+
+            <div class="instruction-rules">
+                <ul>
+                    <li>The clock has been set at the server and the countdown timer at the top right corner of your screen will display remaining time.</li>
+                    <li>The question palette on the right side indicates status: Not Visited, Visited but Not Answered, Answered, Marked for Review.</li>
+                    <li>Click on any question number in the palette to navigate to it instantly.</li>
+                    <li>Select options by clicking radio buttons or option cards.</li>
+                    <li>Use <strong>Save &amp; Next</strong> or <strong>Mark for Review &amp; Next</strong> to record responses.</li>
+                    <li>The examination submits automatically when the timer reaches zero.</li>
+                </ul>
+            </div>
+
+            <label class="checkbox-container">
+                <input type="checkbox" id="accept-instructions" onchange="toggleStartExamBtn()">
+                I have read and understood all instructions. All computer hardware is in proper working condition.
+            </label>
+
+            <button type="button" id="start-exam-btn" class="btn" disabled style="opacity: 0.6; cursor: not-allowed;" onclick="startExamination()">Start Examination</button>
+        </div>
+    </div>
+
+    <!-- CBT EXAMINATION SCREEN -->
+    <div id="exam-screen" class="screen">
+        <div class="fullscreen-bar">
+            <span>Candidate ID: <strong id="display-candidate">admin</strong></span>
+            <span style="margin-left: 20px;">Mode: CBT Theory Assessment</span>
+            <span style="float: right;"><button onclick="toggleFullscreen()">Toggle Fullscreen</button></span>
+        </div>
+        <div class="exam-header">
+            <h3>O LEVEL M3-R5 PYTHON PROGRAMMING PRACTICE SET</h3>
+            <div class="timer-badge" id="timer-display">60:00</div>
+        </div>
+        <div class="exam-body">
+            <div class="question-container">
+                <div class="question-meta">
+                    <span id="question-number-tag">Question 1 of 100</span>
+                    <span>Marks: +1.0 | Negative: 0.0</span>
+                </div>
+                <div class="question-text" id="question-title-text">
+                    Loading question...
+                </div>
+                <div class="options-list" id="options-container"></div>
+                <div class="exam-footer-controls">
+                    <div class="btn-group-left">
+                        <button class="btn-action" onclick="markForReviewAndNext()">Mark for Review &amp; Next</button>
+                        <button class="btn-action" onclick="clearResponse()">Clear Response</button>
+                    </div>
+                    <div class="btn-group-right">
+                        <button class="btn-action" onclick="previousQuestion()">Previous</button>
+                        <button class="btn-action btn-primary-action" onclick="saveAndNext()">Save &amp; Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="palette-sidebar">
+                <div class="palette-header">Question Palette</div>
+                <div class="palette-legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:#ffffff; border:1px solid #94a3b8;"></div><span>Not Visited</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#fee2e2; border:1px solid #fca5a5;"></div><span>Not Answered</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#dcfce7; border:1px solid #86efac;"></div><span>Answered</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f3e8ff; border:1px solid #d8b4fe;"></div><span>Marked</span></div>
+                </div>
+                <div class="palette-grid" id="palette-grid"></div>
+                <button class="submit-exam-btn" onclick="openSubmitModal()">Submit Examination</button>
+            </aside>
+        </div>
+    </div>
+
+    <!-- SUBMISSION CONFIRMATION MODAL -->
+    <div id="submit-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Confirm Examination Submission</h3>
+            <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-light);">Please review your examination summary before final submission:</p>
+            <div class="modal-stats" id="modal-stats-box"></div>
+            <div class="modal-buttons">
+                <button class="btn-action" style="flex:1;" onclick="closeSubmitModal()">Cancel / Return</button>
+                <button class="btn-action btn-primary-action" style="flex:1; background: var(--success-green);" onclick="confirmFinalSubmission()">Submit Final Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="screen">
+        <div class="result-card">
+            <h2>Examination Completed Successfully</h2>
+            <p style="color: var(--text-light); margin-bottom: 15px;">O Level M3-R5 Python Programming Assessment</p>
+            
+            <div class="score-circle">
+                <div id="score-val">0</div>
+                <span>Out of 100</span>
+            </div>
+
+            <div class="result-grid">
+                <div class="result-item">Percentage: <span id="res-percentage">0%</span></div>
+                <div class="result-item">Attempted: <span id="res-attempted">0</span></div>
+                <div class="result-item">Correct Answers: <span id="res-correct">0</span></div>
+                <div class="result-item">Incorrect Answers: <span id="res-incorrect">0</span></div>
+                <div class="result-item" style="grid-column: span 2;">Unattempted Questions: <span id="res-unattempted">100</span></div>
+            </div>
+
+            <p id="performance-remark" style="font-weight: 600; color: var(--secondary-blue); margin-bottom: 20px;"></p>
+            <button class="btn" onclick="restartPortal()">Log Out / Restart Examination</button>
+        </div>
+    </div>
+
+    <script>
+        // Exact 100 Questions and Answer Key derived from OLevel_M3R5_Python_100_MCQs_Chapters_1-6.pdf
+        const rawQuestionBank = [
+            { id: 1, question: "A computer program is best described as:", options: ["A set of instructions for a computer", "A physical computer component", "A type of memory chip", "A network cable"], answer: 0 },
+            { id: 2, question: "Which sequence best represents the program-development process?", options: ["Testing, coding, problem analysis, maintenance", "Problem analysis, design, coding, testing, maintenance", "Coding, maintenance, design, analysis", "Design, maintenance, analysis, coding"], answer: 1 },
+            { id: 3, question: "An algorithm is:", options: ["A programming language only", "A finite, ordered set of steps to solve a problem", "A computer virus", "A storage device"], answer: 1 },
+            { id: 4, question: "Which property requires an algorithm to finish after a limited number of steps?", options: ["Input", "Finiteness", "Ambiguity", "Iteration"], answer: 1 },
+            { id: 5, question: "In a flowchart, which symbol usually represents Start/Stop?", options: ["Rectangle", "Diamond", "Oval/terminator", "Parallelogram"], answer: 2 },
+            { id: 6, question: "Which flowchart symbol represents a decision?", options: ["Diamond", "Circle", "Rectangle", "Arrow"], answer: 0 },
+            { id: 7, question: "A parallelogram in a flowchart commonly represents:", options: ["Processing", "Input/output", "Decision", "Connector only"], answer: 1 },
+            { id: 8, question: "A rectangle in a flowchart usually indicates:", options: ["Input", "Decision", "Processing or calculation", "Start/Stop"], answer: 2 },
+            { id: 9, question: "Pseudocode is:", options: ["Machine code in binary", "A language-independent description of logic", "A Python interpreter", "A flowchart symbol"], answer: 1 },
+            { id: 10, question: "Why is testing performed?", options: ["To decorate code", "To identify defects and check expected behaviour", "To convert RAM into ROM", "To replace algorithm design"], answer: 1 },
+            { id: 11, question: "Which is an example of input data?", options: ["A printed report only", "A value entered by the user", "A CPU fan", "A program comment"], answer: 1 },
+            { id: 12, question: "A syntax error occurs when:", options: ["The program violates language grammar", "The answer is mathematically incorrect but code runs", "The computer is switched off", "A variable has a large value"], answer: 0 },
+            { id: 13, question: "A logic error means:", options: ["The code cannot be typed", "The program runs but produces an incorrect result", "The keyboard is disconnected", "Python is installed"], answer: 1 },
+            { id: 14, question: "Which activity normally follows coding during development?", options: ["Testing/debugging", "Deleting the requirements", "Ignoring errors", "Removing all documentation"], answer: 0 },
+            { id: 15, question: "A flowchart arrow is used to show:", options: ["Data type", "Direction of control flow", "Variable value", "Program size"], answer: 1 },
+            { id: 16, question: "Python is generally classified as a:", options: ["High-level programming language", "Machine-only language", "Markup language", "Database table"], answer: 0 },
+            { id: 17, question: "Which component executes Python source code in the usual Python environment?", options: ["Interpreter", "Scanner", "Plotter", "Router"], answer: 0 },
+            { id: 18, question: "Which is a valid Python identifier?", options: ["2marks", "total-marks", "total_marks", "class"], answer: 2 },
+            { id: 19, question: "Which character may appear in a Python identifier after the first character?", options: ["Hyphen (-)", "Space", "Underscore (_)", "Question mark (?)"], answer: 2 },
+            { id: 20, question: "Python identifiers are:", options: ["Not case-sensitive", "Case-sensitive", "Always uppercase", "Always numeric"], answer: 1 },
+            { id: 21, question: "Which statement assigns 25 to variable x?", options: ["25=x", "x==25", "x=25", "int x:=25"], answer: 2 },
+            { id: 22, question: "Which built-in function displays output?", options: ["input()", "print()", "type()", "len()"], answer: 1 },
+            { id: 23, question: "Which built-in function accepts keyboard input as text?", options: ["read()", "scan()", "input()", "getkey()"], answer: 2 },
+            { id: 24, question: "What is the type of 7 in Python?", options: ["float", "str", "int", "bool"], answer: 2 },
+            { id: 25, question: "What is the type of 7.0?", options: ["int", "float", "tuple", "complex"], answer: 1 },
+            { id: 26, question: "Which value is a Boolean literal?", options: ["'True'", "TRUE", "True", "1.0"], answer: 2 },
+            { id: 27, question: "What is the type of 'O Level'?", options: ["str", "list", "bool", "int"], answer: 0 },
+            { id: 28, question: "Which is a complex number literal in Python?", options: ["4+3j", "4+3i", "complex(4, 3) only", "4j3"], answer: 0 },
+            { id: 29, question: "What does type(12) return?", options: ["12", "int", "It prints a number only", "None"], answer: 1 },
+            { id: 30, question: "Which operator is used for assignment?", options: ["=", "==", "!=", "=>"], answer: 1 },
+            { id: 31, question: "Which statement correctly converts text '45' to an integer?", options: ["int('45')", "str(45)", "float('45') only", "integer('45')"], answer: 0 },
+            { id: 32, question: "What does input() return by default?", options: ["An integer always", "A string", "A Boolean", "A list"], answer: 1 },
+            { id: 33, question: "What is 17 // 5 in Python?", options: ["3.4", "3", "2", "4"], answer: 1 },
+            { id: 34, question: "What is 17 % 5?", options: ["2", "3", "3.4", "5"], answer: 0 },
+            { id: 35, question: "What is 2 ** 3?", options: ["6", "8", "9", "5"], answer: 1 },
+            { id: 36, question: "Which operator tests equality?", options: ["=", "==", "!=", ":="], answer: 1 },
+            { id: 37, question: "Which operator means logical AND?", options: ["&&", "AND()", "and", "&and"], answer: 2 },
+            { id: 38, question: "What is the result of 5 > 2 and 3 < 1?", options: ["True", "False", "1", "Error"], answer: 1 },
+            { id: 39, question: "Which operator checks whether two values are not equal?", options: ["<", "!==", "!=", "not="], answer: 2 },
+            { id: 40, question: "What is the value of 10 / 4?", options: ["2", "2.5", "3", "2.0 as an integer"], answer: 1 },
+            { id: 41, question: "Which operator has exponentiation in Python?", options: ["^", "**", "exp", "//"], answer: 1 },
+            { id: 42, question: "Which expression gives the absolute remainder when n is divided by 2?", options: ["n/2", "n//2", "n % 2", "n**2"], answer: 2 },
+            { id: 43, question: "What is the result of not True?", options: ["True", "False", "None", "1"], answer: 1 },
+            { id: 44, question: "Which operator checks membership?", options: ["in", "is", "=", "contains"], answer: 0 },
+            { id: 45, question: "What does the expression 'p' in 'python' evaluate to?", options: ["False", "True", "None", "SyntaxError"], answer: 1 },
+            { id: 46, question: "Which conversion produces a floating-point number?", options: ["int('8.5')", "float('8.5')", "str(8.5)", "bool('8.5')"], answer: 1 },
+            { id: 47, question: "What is the result of int(6.9)?", options: ["7", "6", "6.9", "Error"], answer: 1 },
+            { id: 48, question: "Which statement is a compound statement?", options: ["x=5", "print(x)", "if x > 0:", "x+2"], answer: 2 },
+            { id: 49, question: "In Python, a block is indicated mainly by:", options: ["Braces", "Indentation", "Semicolons", "Parentheses"], answer: 1 },
+            { id: 50, question: "Which keyword begins a conditional statement?", options: ["when", "if", "check", "case"], answer: 1 },
+            { id: 51, question: "Which keyword handles an alternative condition after if?", options: ["otherwise", "elif", "then", "elseif"], answer: 1 },
+            { id: 52, question: "Which block executes when an if condition is false and no earlier branch matches?", options: ["try", "else", "finally", "loop"], answer: 1 },
+            { id: 53, question: "Which loop is commonly used to iterate over a sequence?", options: ["for", "switch", "repeat-until", "foreach()"], answer: 0 },
+            { id: 54, question: "Which loop repeats while a condition remains true?", options: ["if", "while", "def", "class"], answer: 1 },
+            { id: 55, question: "What does range(5) generate?", options: ["1,2,3,4,5", "0,1,2,3,4", "0,1,2,3,4,5", "5 only"], answer: 1 },
+            { id: 56, question: "How many times does for i in range(2, 7) execute?", options: ["4", "5", "6", "7"], answer: 1 },
+            { id: 57, question: "What does break do inside a loop?", options: ["Skips one iteration only", "Terminates the nearest loop", "Restarts the program", "Pauses the computer"], answer: 1 },
+            { id: 58, question: "What does continue do?", options: ["Ends all loops", "Skips the rest of the current iteration", "Defines a function", "Returns a value"], answer: 1 },
+            { id: 59, question: "What is an infinite loop?", options: ["A loop that never begins", "A loop whose termination condition is never reached", "A loop with one iteration", "A syntax error only"], answer: 1 },
+            { id: 60, question: "What is the output of: for i in range(3): print(i)?", options: ["1 2 3", "0 1 2", "0 1 2 3", "3 only"], answer: 1 },
+            { id: 61, question: "Which statement is used as a placeholder that does nothing?", options: ["skip", "pass", "null", "empty"], answer: 1 },
+            { id: 62, question: "What is the purpose of nested loops?", options: ["To put one loop inside another", "To stop Python", "To define a string", "To import a module"], answer: 0 },
+            { id: 63, question: "In a while loop, why is updating a counter often necessary?", options: ["To change the program language", "To avoid an unintended infinite loop", "To create a comment", "To convert a list to a tuple"], answer: 1 },
+            { id: 64, question: "Which operator is often used to test evenness?", options: ["n/2 == 0", "n % 2 == 0", "n//2 == 1", "n**2 == 0"], answer: 1 },
+            { id: 65, question: "What does else attached to a loop do in Python?", options: ["Always runs before the loop", "Runs if the loop ends without break", "Runs only when break occurs", "Defines a new loop"], answer: 1 },
+            { id: 66, question: "Which is the correct syntax?", options: ["if x > 0 then:", "if (x > 0)", "if x > 0:", "if x > 0 do"], answer: 2 },
+            { id: 67, question: "A Python string is:", options: ["A sequence of characters", "A sequence of only integers", "A key-value table only", "An unordered unique collection"], answer: 0 },
+            { id: 68, question: "Which index refers to the first character of a string s?", options: ["1", "0", "-0", "len(s)"], answer: 1 },
+            { id: 69, question: "What does 'Python'[1] return?", options: ["P", "y", "t", "Python"], answer: 1 },
+            { id: 70, question: "What does 'Python'[-1] return?", options: ["P", "n", "o", "Error"], answer: 1 },
+            { id: 71, question: "What does len([10, 20, 30]) return?", options: ["2", "3", "30", "60"], answer: 1 },
+            { id: 72, question: "Which collection is mutable?", options: ["tuple", "string", "list", "int"], answer: 2 },
+            { id: 73, question: "Which brackets create a list literal?", options: ["()", "[]", "{}", "<>"], answer: 1 },
+            { id: 74, question: "Which brackets commonly create a tuple literal?", options: ["[]", "{}", "()", "//"], answer: 2 },
+            { id: 75, question: "Which list method adds one item to the end?", options: ["append()", "addend()", "insertend()", "push_back()"], answer: 0 },
+            { id: 76, question: "Which list method removes and removes/returns an item by index (last item by default)?", options: ["delete()", "pop()", "discard()", "clearall()"], answer: 1 },
+            { id: 77, question: "What does list.sort() do?", options: ["Returns a sorted copy and leaves original unchanged", "Sorts the list in place", "Converts list to tuple", "Removes duplicates only"], answer: 1 },
+            { id: 78, question: "Which collection stores unique elements?", options: ["list", "tuple", "set", "string"], answer: 2 },
+            { id: 79, question: "Which literal represents an empty set?", options: ["{}", "set()", "[]", "()"], answer: 1 },
+            { id: 80, question: "A dictionary stores data as:", options: ["Only ordered characters", "Key-value pairs", "Unique values without keys", "Fixed positional values only"], answer: 1 },
+            { id: 81, question: "Which expression accesses the value for key 'name' in d?", options: ["d.name", "d['name']", "d(name)", "d->name"], answer: 1 },
+            { id: 82, question: "Which string method changes letters to uppercase?", options: ["upper()", "capital()", "uppercase()", "up()"], answer: 0 },
+            { id: 83, question: "What does s[1:4] select?", options: ["Indices 1 through 4 inclusive", "Indices 1, 2, and 3", "Only index 4", "All characters after 4"], answer: 1 },
+            { id: 84, question: "A function is:", options: ["A reusable block of code", "A hardware device", "A data type only", "A flowchart symbol"], answer: 0 },
+            { id: 85, question: "Which keyword defines a function?", options: ["function", "define", "def", "fun"], answer: 2 },
+            { id: 86, question: "Which statement sends a result back from a function?", options: ["print", "yield only", "return", "break"], answer: 2 },
+            { id: 87, question: "What does a function return if it has no return statement?", options: ["0", "False", "None", "An empty string"], answer: 2 },
+            { id: 88, question: "In def add(a, b):, a and b are:", options: ["Arguments supplied only at call time", "Parameters", "Modules", "Keywords"], answer: 1 },
+            { id: 89, question: "In add(2, 3), 2 and 3 are:", options: ["Parameters", "Arguments", "Identifiers only", "Return types"], answer: 1 },
+            { id: 90, question: "Which is a built-in Python function?", options: ["display()", "printf()", "len()", "echo()"], answer: 2 },
+            { id: 91, question: "What is the purpose of a docstring?", options: ["To explain/document a module, class, or function", "To stop a loop", "To assign a variable", "To import a package"], answer: 0 },
+            { id: 92, question: "Which statement imports the math module?", options: ["include math", "import math", "using math", "load(math)"], answer: 1 },
+            { id: 93, question: "Which call returns the square root of 25 using math?", options: ["math.root(25)", "math.sqrt(25)", "sqrt.math(25)", "math.square(25)"], answer: 1 },
+            { id: 94, question: "What is recursion?", options: ["A function calling itself", "A loop without a condition", "A type conversion", "A syntax comment"], answer: 0 },
+            { id: 95, question: "A local variable is normally defined:", options: ["Inside a function", "Only in the operating system", "In every module automatically", "Only in a list"], answer: 0 },
+            { id: 96, question: "A global variable is generally defined:", options: ["Inside a loop only", "At module level, outside functions", "Only as a function parameter", "Inside a tuple"], answer: 1 },
+            { id: 97, question: "Which statement begins exception handling?", options: ["catch", "except", "error", "handle"], answer: 1 },
+            { id: 98, question: "Which construct is used to handle a possible exception?", options: ["if/elif only", "try/except", "for/in", "def/return"], answer: 1 },
+            { id: 99, question: "Which exception commonly occurs when dividing a number by zero?", options: ["NameError", "ZeroDivisionError", "IndexError", "KeyError"], answer: 1 },
+            { id: 100, question: "Which exception can occur when accessing a missing list index?", options: ["IndexError", "TypeError", "ImportError", "IndentationError"], answer: 0 }
+        ];
+
+        let currentUser = null;
+        let activeSessionKey = null;
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let userAnswers = {};
+        let questionStatus = {};
+        let timerInterval = null;
+        let timeRemaining = 3600;
+        let examSubmitted = false;
+
+        const validCredentials = {
+            "admin100": "100",
+            "admin101": "101"
+        };
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.add('active');
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const btn = document.querySelector('.toggle-password');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                pwdInput.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const errBox = document.getElementById('login-error');
+
+            if (validCredentials[user] && validCredentials[user] === pass) {
+                currentUser = user;
+                activeSessionKey = `cbt_python_session_${currentUser}`;
+                errBox.style.display = 'none';
+                document.getElementById('display-candidate').textContent = currentUser;
+                switchScreen('instructions-screen');
+            } else {
+                errBox.style.display = 'block';
+            }
+        }
+
+        function toggleStartExamBtn() {
+            const checkbox = document.getElementById('accept-instructions');
+            const btn = document.getElementById('start-exam-btn');
+            if (checkbox.checked) {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                btn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startExamination() {
+            const savedStateStr = localStorage.getItem(activeSessionKey);
+            if (savedStateStr) {
+                try {
+                    const state = JSON.parse(savedStateStr);
+                    questions = state.questions;
+                    userAnswers = state.userAnswers;
+                    questionStatus = state.questionStatus;
+                    currentQuestionIndex = state.currentQuestionIndex;
+                    timeRemaining = state.timeRemaining;
+                } catch(e) {
+                    initNewSession();
+                }
+            } else {
+                initNewSession();
+            }
+
+            switchScreen('exam-screen');
+            initPalette();
+            loadQuestion(currentQuestionIndex);
+            startTimer();
+        }
+
+        function initNewSession() {
+            questions = rawQuestionBank.map(q => {
+                const originalOptionsWithIndex = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
+                const shuffledOpts = shuffleArray(originalOptionsWithIndex);
+                const newAnswerIndex = shuffledOpts.findIndex(o => o.isCorrect);
+                return {
+                    id: q.id,
+                    question: q.question,
+                    options: shuffledOpts.map(o => o.text),
+                    answer: newAnswerIndex
+                };
+            });
+            questions = shuffleArray(questions);
+
+            userAnswers = {};
+            questionStatus = {};
+            questions.forEach(q => {
+                questionStatus[q.id] = 'not-visited';
+            });
+            currentQuestionIndex = 0;
+            timeRemaining = 3600;
+            saveSessionState();
+        }
+
+        function saveSessionState() {
+            if (!activeSessionKey || examSubmitted) return;
+            const state = {
+                questions,
+                userAnswers,
+                questionStatus,
+                currentQuestionIndex,
+                timeRemaining
+            };
+            localStorage.setItem(activeSessionKey, JSON.stringify(state));
+        }
+
+        let timerStartTime = null;
+        let initialDuration = 3600;
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            const sessionTimerKey = `${activeSessionKey}_timer_start`;
+            const storedStartTime = localStorage.getItem(sessionTimerKey);
+            const savedStateStr = localStorage.getItem(activeSessionKey);
+            let savedTime = 3600;
+            if(savedStateStr) {
+                try {
+                    savedTime = JSON.parse(savedStateStr).timeRemaining;
+                } catch(e) {}
+            }
+
+            if (!storedStartTime) {
+                timerStartTime = Date.now();
+                initialDuration = savedTime;
+                localStorage.setItem(sessionTimerKey, timerStartTime);
+                localStorage.setItem(`${activeSessionKey}_duration`, initialDuration);
+            } else {
+                timerStartTime = parseInt(storedStartTime, 10);
+                initialDuration = parseInt(localStorage.getItem(`${activeSessionKey}_duration`) || '3600', 10);
+            }
+
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                const elapsedSeconds = Math.floor((Date.now() - timerStartTime) / 1000);
+                timeRemaining = initialDuration - elapsedSeconds;
+
+                if (timeRemaining <= 0) {
+                    timeRemaining = 0;
+                    updateTimerDisplay();
+                    clearInterval(timerInterval);
+                    autoSubmitExamination();
+                    return;
+                }
+                updateTimerDisplay();
+                saveSessionState();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeRemaining / 60);
+            const secs = timeRemaining % 60;
+            const displayStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            const timerEl = document.getElementById('timer-display');
+            if (timerEl) {
+                timerEl.textContent = displayStr;
+            }
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('question-number-tag').textContent = `Question ${currentQuestionIndex + 1} of 100`;
+            document.getElementById('question-title-text').textContent = q.question;
+
+            if (questionStatus[q.id] === 'not-visited') {
+                questionStatus[q.id] = 'visited-not-answered';
+            }
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((optText, optIdx) => {
+                const isSelected = userAnswers[q.id] === optIdx;
+                const optDiv = document.createElement('div');
+                optDiv.className = `option-item ${isSelected ? 'selected' : ''}`;
+
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'q_opt';
+                input.id = `opt_${optIdx}`;
+                if (isSelected) input.checked = true;
+                input.onchange = () => selectOption(optIdx);
+
+                const label = document.createElement('label');
+                label.htmlFor = `opt_${optIdx}`;
+                label.style.cursor = 'pointer';
+                label.style.flex = '1';
+                label.textContent = optText;
+
+                optDiv.appendChild(input);
+                optDiv.appendChild(label);
+
+                optDiv.onclick = (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        input.checked = true;
+                    }
+                    selectOption(optIdx);
+                };
+
+                optionsContainer.appendChild(optDiv);
+            });
+
+            updatePaletteUI();
+            saveSessionState();
+        }
+
+        function selectOption(optIdx) {
+            const q = questions[currentQuestionIndex];
+            userAnswers[q.id] = optIdx;
+            
+            if (questionStatus[q.id] === 'marked') {
+                questionStatus[q.id] = 'answered-marked';
+            } else {
+                questionStatus[q.id] = 'answered';
+            }
+            updatePaletteUI();
+            
+            document.querySelectorAll('.option-item').forEach((el, idx) => {
+                if (idx === optIdx) el.classList.add('selected');
+                else el.classList.remove('selected');
+            });
+            saveSessionState();
+        }
+
+        function clearResponse() {
+            const q = questions[currentQuestionIndex];
+            delete userAnswers[q.id];
+            if (questionStatus[q.id] === 'answered-marked') {
+                questionStatus[q.id] = 'marked';
+            } else {
+                questionStatus[q.id] = 'visited-not-answered';
+            }
+            loadQuestion(currentQuestionIndex);
+        }
+
+        function saveAndNext() {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function markForReviewAndNext() {
+            const q = questions[currentQuestionIndex];
+            if (userAnswers[q.id] !== undefined) {
+                questionStatus[q.id] = 'answered-marked';
+            } else {
+                questionStatus[q.id] = 'marked';
+            }
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            } else {
+                updatePaletteUI();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function jumpToQuestion(index) {
+            loadQuestion(index);
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-btn not-visited';
+                btn.id = `pal_btn_${idx}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                grid.appendChild(btn);
+            });
+            updatePaletteUI();
+        }
+
+        function updatePaletteUI() {
+            questions.forEach((q, idx) => {
+                const btn = document.getElementById(`pal_btn_${idx}`);
+                if (!btn) return;
+                
+                const status = questionStatus[q.id];
+                btn.className = 'palette-btn';
+                
+                if (idx === currentQuestionIndex) {
+                    btn.classList.add('current');
+                }
+
+                if (status === 'not-visited') btn.classList.add('not-visited');
+                else if (status === 'visited-not-answered') btn.classList.add('visited-not-answered');
+                else if (status === 'answered') btn.classList.add('answered');
+                else if (status === 'marked') btn.classList.add('marked');
+                else if (status === 'answered-marked') btn.classList.add('answered-marked');
+            });
+        }
+
+        function openSubmitModal() {
+            if (examSubmitted) return;
+            
+            let answeredCount = 0;
+            let notAnsweredCount = 0;
+            let markedCount = 0;
+            let notVisitedCount = 0;
+
+            questions.forEach(q => {
+                const s = questionStatus[q.id];
+                if (s === 'answered' || s === 'answered-marked') answeredCount++;
+                if (s === 'visited-not-answered') notAnsweredCount++;
+                if (s === 'marked') markedCount++;
+                if (s === 'not-visited') notVisitedCount++;
+            });
+
+            const statsBox = document.getElementById('modal-stats-box');
+            statsBox.innerHTML = `
+                <div><span>Answered:</span> <strong>${answeredCount}</strong></div>
+                <div><span>Not Answered:</span> <strong>${notAnsweredCount}</strong></div>
+                <div><span>Marked for Review:</span> <strong>${markedCount}</strong></div>
+                <div><span>Not Visited:</span> <strong>${notVisitedCount}</strong></div>
+                <div><span>Total Questions:</span> <strong>100</strong></div>
+            `;
+
+            document.getElementById('submit-modal').style.display = 'flex';
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submit-modal').style.display = 'none';
+        }
+
+        function confirmFinalSubmission() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            closeSubmitModal();
+            if (timerInterval) clearInterval(timerInterval);
+
+            let correct = 0;
+            let attempted = 0;
+
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    attempted++;
+                    if (userAnswers[q.id] === q.answer) {
+                        correct++;
+                    }
+                }
+            });
+
+            const incorrect = attempted - correct;
+            const unattempted = 100 - attempted;
+            const marksObtained = correct;
+            const percentage = correct;
+
+            document.getElementById('score-val').textContent = marksObtained;
+            document.getElementById('res-percentage').textContent = `${percentage}%`;
+            document.getElementById('res-attempted').textContent = attempted;
+            document.getElementById('res-correct').textContent = correct;
+            document.getElementById('res-incorrect').textContent = incorrect;
+            document.getElementById('res-unattempted').textContent = unattempted;
+
+            const remarkEl = document.getElementById('performance-remark');
+            if (marksObtained >= 85) {
+                remarkEl.textContent = "Outstanding performance! Expert mastery of O Level Python programming concepts.";
+            } else if (marksObtained >= 60) {
+                remarkEl.textContent = "Good performance! Solid programming knowledge with minor areas for review.";
+            } else if (marksObtained >= 40) {
+                remarkEl.textContent = "Fair performance. Review Python syntax, control structures, and collections.";
+            } else {
+                remarkEl.textContent = "Needs improvement. Thorough study of Chapters 1 to 6 recommended.";
+            }
+
+            localStorage.removeItem(activeSessionKey);
+            localStorage.removeItem(`${activeSessionKey}_timer_start`);
+            localStorage.removeItem(`${activeSessionKey}_duration`);
+
+            switchScreen('result-screen');
+        }
+
+        function autoSubmitExamination() {
+            if (examSubmitted) return;
+            alert("Examination time has expired. Your test will be submitted automatically.");
+            confirmFinalSubmission();
+        }
+
+        function restartPortal() {
+            localStorage.clear();
+            window.location.reload();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {});
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
